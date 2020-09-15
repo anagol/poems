@@ -29,7 +29,6 @@ header p {
     color: #1c232d;
 }
 
-
 li {
     list-style-type: none;
 }
@@ -150,6 +149,7 @@ ul {
 .book_front{
     box-shadow: 0 0 10px rgba(0,0,0,0.8);
 }
+
 .father {
     width: 200px;
     height: 200px;

@@ -67,7 +67,7 @@ def verse(verse_id):
     return render_template('verse.html', verse=verse)
 
 
-@app.route('/create', methods=('GET', 'POST'))
+@app.route('/create', methods=['GET', 'POST'])
 def create():
     if request.method == 'POST':
         title = request.form['title']
@@ -86,11 +86,11 @@ def create():
     return render_template('create.html')
 
 
-@app.route('/guest_book', methods=('GET', 'POST'))
+@app.route('/guest_book', methods=['GET', 'POST'])
 def guest_book():
     if request.method == 'POST':
         guestname = request.form['guestname']
-        messagecontent = request.form['messgecontent']
+        messagecontent = request.form['messagecontent']
 
         if not guestname:
             flash('Вы не ввели имя!')
