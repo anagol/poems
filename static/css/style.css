@@ -4,7 +4,11 @@
 }
 @font-face {
     font-family: Annabelle;
-    src: local('Annabelle'), url('/static/fonts/Annabelle.ttf') format('ttf');
+    src: url('/static/fonts/Annabelle.ttf') format('truetype');
+}
+@font-face {
+    font-family: Jikharev;
+    src: url('/static/fonts/Jikharev.ttf') format('truetype');
 }
 body {
     background-color: #373535;
