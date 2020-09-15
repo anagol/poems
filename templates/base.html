@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="shortcut icon" href="/static/image/notebook.ico" type="image/png">
+</head>
+<body>
+
+{% block header %}
+    <header>
+        <div class="part">
+            <div class="nav_img">
+                {#                <img class="pervomaysk" src="/static/image/pervomaysk.jpeg" alt="">#}
+                <p>Анатолий Голосной</p>
+                <img class="father" src="/static/image/father2.jpg" alt="">
+            </div>
+
+            <div class="nav">
+                <ul>
+                    <li><a class="p-2 text-light" href="{{ '/' }}">Главная</a></li>
+                    <li><a class="p-2 text-light" href="{{ '/verses' }}">Стихи</a></li>
+                    <li><a class="p-2 text-light" href="{{ '/about' }}">Об авторе</a></li>
+                    <li><a class="p-2 text-light" href="{{ '/guest' }}">Гостевая книга</a></li>
+                    <li><a class="p-2 text-light" href="{{ '/contacts' }}">Контакты</a></li>
+                </ul>
+
+            </div>
+        </div>
+    </header>
+{% endblock %}
+<div class="container">
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-danger">{{ message }}</div>
+    {% endfor %}
+
+    {% block content %}
+    {% endblock %}
+
+</div>
+<footer>
+    <div>
+        © 2020 Copyright: Anatoli Halasny
+    </div>
+</footer>
+
+
+</body>
+</html>

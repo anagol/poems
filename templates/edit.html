@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>{% block title %}Редактируем стих "{{ verse['title'] }}"{% endblock %}</h1>
+
+    <form method="post">
+        <div class="form-group">
+            <label for="title" class="text-light">Название стиха</label>
+            <input type="text" name="title" placeholder="Название стиха" class="form-control"
+                   value="{{ request.form['title'] or verse['title']}}" >
+        </div>
+        <div class="form-group">
+            <label for="content" class="text-light">Текст стиха</label>
+            <textarea name='content' placeholder="Текст стиха" class="form-control" rows="10">
+                      {{ request.form['content'] or verse['content']}}</textarea>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Записать</button>
+        </div>
+    </form>
+    <form action="{{ url_for('delete', id=verse['id']) }}" method="post">
+        <input type="submit" value="Удалить стих"
+        class="btn btn-danger btn-sm"
+        onclick="return confirm('Вы действительно хотите удалить этот стих?')">
+    </form>
+{% endblock %}
+
+

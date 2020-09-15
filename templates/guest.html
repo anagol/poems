@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>{% block title %}{{ title }}{% endblock %}</h1>
+    {% for guest in guests %}
+        <div class="message">
+            <h3>{{ guest['guestname'] }}</h3>
+            <p>{{ guest['messagecontent'] }}</p>
+            <span>{{ guest['created'] }}</span>
+        </div>
+
+    {% endfor %}
+
+
+    <form method="post">
+        <div class="form-group">
+            <label for="guestname" class="text-light">Ваше имя</label>
+            <input type="text" name="guestname" placeholder="Введите ваше имя" class="form-control"
+                   value="{{ request.form['guestname'] }}">
+        </div>
+        <div class="form-group">
+            <label for="messagecontent" class="text-light">Текст сообщения</label>
+            <textarea name='messagecontent' placeholder="Введите текст сообщения" class="form-control"
+                      rows="10">{{ request.form['messagecontent'] }}</textarea>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Отправить</button>
+        </div>
+    </form>
+
+
+{% endblock %}

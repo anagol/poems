@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{ title }}</h1>
+{% for verse in verses %}
+    <a href="{{ url_for('verse', verse_id=verse['id']) }}">
+        <h3>{{ verse['title'] }}</h3></a>
+
+{% endfor %}
+
+{% endblock %}

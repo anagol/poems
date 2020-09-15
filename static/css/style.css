@@ -1,0 +1,178 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+@font-face {
+    font-family: Annabelle;
+    src: local('Annabelle'), url('/static/fonts/Annabelle.ttf') format('ttf');
+}
+body {
+    background-color: #373535;
+    min-height: 100%;
+    position: relative;
+}
+
+header {
+
+    background-color: dimgray;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+header p {
+    font-family: Annabelle, serif;
+    font-size: 90px;
+    color: #1c232d;
+}
+
+
+li {
+    list-style-type: none;
+}
+
+li a {
+    font-family: Jikharev, serif;
+    font-size: 35px;
+}
+
+h1 {
+    color: #c5d5ec;
+    text-align: center;
+    margin-top: 20px;
+    font-family: Jikharev, serif;
+}
+
+.about {
+    display: flex;
+    justify-content: center;
+    font-family: Jikharev, serif;
+}
+
+.about p {
+    width: 80%;
+    margin-top: 20px;
+    color: aliceblue;
+    text-align: justify;
+    font-size: 30px;
+}
+
+.verse {
+    display: flex;
+    justify-content: center;
+}
+
+.contact {
+    text-align: center;
+    font-size: 30px;
+    margin-top: 20px;
+    color: #ddd4d4;
+    font-family: Jikharev, serif;
+}
+
+.main-verse {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 500;
+    font-family: Jikharev, serif;
+    color: white;
+    white-space: pre-wrap;
+}
+
+h2 {
+    color: #2cbed9;
+    text-align: center;
+    margin-top: 20px;
+    font-family: Jikharev, serif;
+    font-size: 40px;
+}
+h3{
+    color: #ecc5c5;
+    /*text-align: center;*/
+    margin-top: 16px;
+    font-family: Jikharev, serif;
+}
+.list{
+    color: #ecc5c5;
+    text-align: center;
+    margin-top: 16px;
+    font-family: Jikharev, serif;
+    font-size: 33px;
+}
+footer {
+    width: 100%;
+    height: 80px;
+    background-color: #626262;
+    margin-top: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: wheat;
+    font-weight: 500;
+    position: relative;
+}
+
+.nav {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+ul {
+    display: flex;
+    justify-content: center;
+    color: #1c232d;
+}
+
+.books {
+    margin-left: 150px;
+    width: 100%;
+
+    position: inherit;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.begin {
+    font-family: Jikharev, serif;
+    color: #ddd4d4;
+    font-size: 30px;
+    text-align: justify;
+}
+
+.books_img {
+    display: flex;
+    justify-content: space-evenly;
+}
+.book_front{
+    box-shadow: 0 0 10px rgba(0,0,0,0.8);
+}
+.father {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    margin-left: 50px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+.nav_img {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.nav_img p {
+    text-shadow: 1px 1px 2px black, 0 0 1em blue;
+}
+
+.message{
+    color: white;
+    margin-bottom: 30px;
+}
+
+/*.pervomaysk{*/
+/*    width: 400px;*/
+/*    height: 200px;*/
+/*    border-radius: 50%;*/
+/*    margin-right: 50px;*/
+/*    box-shadow: 0 0 10px rgba(0,0,0,0.5);*/
+/*}*/
