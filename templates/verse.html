@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2>{% block title %}{{ verse['title'] }}{% endblock %}</h2>
-    <p class="main-verse">{{ verse['content'] }}</p>
+
+    <h2>{% block title %}{{ verse['title'] }}{% endblock %}</h2>
+    <div class="verse_content">
+        <p class="main-verse">{{ verse['content'] }}</p>
+    </div>
     <p class="list"><a href="{{ '/verses' }}">К списку</a></p>
+
 {% endblock %}

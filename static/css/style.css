@@ -71,9 +71,12 @@ h1 {
     color: #ddd4d4;
     font-family: Jikharev, serif;
 }
-
+.verse_content{
+    display: flex;
+    justify-content: center;
+}
 .main-verse {
-    text-align: center;
+    text-align: left;
     font-size: 28px;
     font-weight: 500;
     font-family: Jikharev, serif;
