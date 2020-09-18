@@ -61,6 +61,11 @@ def contacts():
     return render_template('contacts.html', title='Контакты')
 
 
+@app.route('/admin')
+def admin():
+    return  render_template('admin.html', title='Панель администратора')
+
+
 @app.route('/<int:verse_id>')
 def verse(verse_id):
     verse = get_verse(verse_id)
