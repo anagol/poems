@@ -40,11 +40,11 @@
 
             <div class="nav">
                 <ul>
-                    <li><a class="p-2 text-light" href="{{ '/' }}">Главная</a></li>
-                    <li><a class="p-2 text-light" href="{{ '/verses' }}">Стихи</a></li>
-                    <li><a class="p-2 text-light" href="{{ '/about' }}">Об авторе</a></li>
-                    <li><a class="p-2 text-light" href="{{ '/guest' }}">Гостевая книга</a></li>
-                    <li><a class="p-2 text-light" href="{{ '/contacts' }}">Контакты</a></li>
+                    <li><a class="p-2 text-light" href="{{ url_for('index') }}">Главная</a></li>
+                    <li><a class="p-2 text-light" href="{{ url_for('verses') }}">Стихи</a></li>
+                    <li><a class="p-2 text-light" href="{{ url_for('about') }}">Об авторе</a></li>
+                    <li><a class="p-2 text-light" href="{{ url_for('guest') }}">Гостевая книга</a></li>
+                    <li><a class="p-2 text-light" href="{{ url_for('contacts') }}">Контакты</a></li>
                 </ul>
 
             </div>
@@ -62,7 +62,7 @@
 </div>
 <footer>
     <div>
-        © 2020 Copyright: <a href="{{ '/admin' }}">Anatoly Golosnoy(Jr)</a>
+        © 2020 Copyright: <a href="{{ url_for('login') }}">Anatoly Golosnoy(Jr)</a>
     </div>
 </footer>
 

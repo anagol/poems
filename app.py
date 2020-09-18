@@ -1,9 +1,20 @@
 import sqlite3
 from flask import Flask, render_template, request, url_for, flash, redirect
 from werkzeug.exceptions import abort
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms.validators import DataRequired
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'anatolihalasny1969'
+
+
+class LoginForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    remember_me = BooleanField('Remember Me')
+    submit = SubmitField('Sign In')
 
 
 def get_db_connection():
@@ -30,7 +41,7 @@ def get_guest(guest_id):
     return guest
 
 
-@app.route('/')
+@app.route('/index')
 def index():
     return render_template('index.html', title='Главная')
 
@@ -63,7 +74,17 @@ def contacts():
 
 @app.route('/admin')
 def admin():
-    return  render_template('admin.html', title='Панель администратора')
+    return render_template('admin.html', title='Панель администратора')
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        flash('Login requested for user {}, remember_me={}'.format(
+            form.username.data, form.remember_me.data))
+        return redirect(url_for('index'))
+    return render_template('login.html', title='Панель входа', form=form)
 
 
 @app.route('/<int:verse_id>')
