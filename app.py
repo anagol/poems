@@ -58,7 +58,6 @@ def guest():
         db.session.add(guest)
         db.session.commit()
         return redirect(url_for('guest'))
-
     return render_template('guest.html', title='Гостевая книга', guest=guest)
 
 
@@ -89,7 +88,6 @@ def login():
     if request.method == "POST":
         email = request.form["email"]
         password = request.form["password"]
-
         login = User.query.filter_by(email=email, password=password).first()
         if login is not None:
             return redirect(url_for("create"))
@@ -132,12 +130,22 @@ def create():
 
 @app.route('/<int:id>/edit', methods=('GET', 'POST'))
 def edit(id):
+    verse = Verses.query.get_or_404(id)
+    if request.method == 'POST':
+        verse.title = request.form['title']
+        verse.content = request.form['content']
+        db.session.commit()
+        return redirect('/verses')
+    else:
+        return render_template('edit.html', verse=verse)
 
-    return render_template('edit.html', verse=verse)
 
 
 @app.route('/<int:id>/delete', methods=('POST',))
 def delete(id):
+    verse = Verses.query.get_or_404(id)
+    db.session.delete(verse)
+    db.session.commit()
     return redirect(url_for('verses'))
 
 
