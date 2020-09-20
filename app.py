@@ -48,9 +48,30 @@ def about():
     return render_template('about.html', title='Об авторе')
 
 
-@app.route('/guest')
+@app.route('/guest', methods=['GET', 'POST'])
 def guest():
-    return render_template('guest.html', title='Гостевая книга', guests=guest)
+    guest = Guest.query.all()
+    if request.method == "POST":
+        name = request.form["name"]
+        message = request.form["message"]
+        guest = Guest(name=name, message=message)
+        db.session.add(guest)
+        db.session.commit()
+        return redirect(url_for('guest'))
+
+    return render_template('guest.html', title='Гостевая книга', guest=guest)
+
+
+# @app.route('/guest_book', methods=['GET', 'POST'])
+# def guest_book():
+#     if request.method == "POST":
+#         name = request.form["name"]
+#         message = request.form["message"]
+#         guest = Guest(name=name, message=message)
+#         db.session.add(guest)
+#         db.session.commit()
+#         return redirect(url_for('guest'))
+#     return render_template('guest.html')
 
 
 @app.route('/contacts')
@@ -109,13 +130,9 @@ def create():
     return render_template('create.html')
 
 
-@app.route('/guest_book', methods=['GET', 'POST'])
-def guest_book():
-    return render_template('guest.html')
-
-
 @app.route('/<int:id>/edit', methods=('GET', 'POST'))
 def edit(id):
+
     return render_template('edit.html', verse=verse)
 
 
