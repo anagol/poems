@@ -1,9 +1,9 @@
 from datetime import datetime
 from flask import Flask, render_template, request, url_for, flash, redirect
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.sql import func
-from wtforms.validators import DataRequired
 from werkzeug.security import generate_password_hash, check_password_hash
+from passlib.hash import pbkdf2_sha256
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'anatolihalasny1969'
@@ -91,6 +91,8 @@ def login():
         login = User.query.filter_by(email=email, password=password).first()
         if login is not None:
             return redirect(url_for("create"))
+        else:
+            flash('Что-то не так!')
     return render_template("login.html")
 
 
@@ -98,12 +100,11 @@ def login():
 def register():
     if request.method == "POST":
         email = request.form["email"]
-        password = request.form["password"]
-
+        password = pbkdf2_sha256.hash(request.form["password"])
         register = User(email=email, password=password)
         db.session.add(register)
         db.session.commit()
-
+        flash('Вы успешно зарегистрированы, теперь можете войти в систему!')
         return redirect(url_for("login"))
     return render_template("register.html")
 
@@ -115,6 +116,7 @@ def verse(verse_id):
 
 
 @app.route('/create', methods=['GET', 'POST'])
+# @login_required
 def create():
     if request.method == "POST":
         title = request.form["title"]
@@ -138,7 +140,6 @@ def edit(id):
         return redirect('/verses')
     else:
         return render_template('edit.html', verse=verse)
-
 
 
 @app.route('/<int:id>/delete', methods=('POST',))
