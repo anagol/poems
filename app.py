@@ -1,44 +1,35 @@
-import sqlite3
+from datetime import datetime
 from flask import Flask, render_template, request, url_for, flash, redirect
-from werkzeug.exceptions import abort
-from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import func
 from wtforms.validators import DataRequired
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'anatolihalasny1969'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+db = SQLAlchemy(app)
 
 
-class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    remember_me = BooleanField('Remember Me')
-    submit = SubmitField('Sign In')
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    email = db.Column(db.String(120))
+    password = db.Column(db.String(80))
 
 
-def get_db_connection():
-    conn = sqlite3.connect('database.db')
-    conn.row_factory = sqlite3.Row
-    return conn
+class Verses(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    title = db.Column(db.String(80))
+    content = db.Column(db.String(120))
+    password = db.Column(db.Text)
 
 
-def get_verse(verse_id):
-    conn = get_db_connection()
-    verse = conn.execute('SELECT * FROM verses WHERE id = ?', (verse_id,)).fetchone()
-    conn.close()
-    if verse is None:
-        abort(404)
-    return verse
-
-
-def get_guest(guest_id):
-    conn = get_db_connection()
-    guest = conn.execute('SELECT * FROM guests WHERE id = ?', (guest_id,)).fetchone()
-    conn.close()
-    if guest is None:
-        abort(404)
-    return guest
+class Guest(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    pub_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    name = db.Column(db.String(80))
+    message = db.Column(db.Text)
 
 
 @app.route('/')
@@ -49,9 +40,6 @@ def index():
 
 @app.route('/verses')
 def verses():
-    conn = get_db_connection()
-    verse = conn.execute('SELECT * FROM verses').fetchall()
-    conn.close()
     return render_template('verses.html', title='Стихи', verses=verse)
 
 
@@ -62,9 +50,6 @@ def about():
 
 @app.route('/guest')
 def guest():
-    conn = get_db_connection()
-    guest = conn.execute('SELECT * FROM guests').fetchall()
-    conn.close()
     return render_template('guest.html', title='Гостевая книга', guests=guest)
 
 
@@ -78,86 +63,54 @@ def admin():
     return render_template('admin.html', title='Панель администратора')
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        flash('Login requested for user {}, remember_me={}'.format(
-            form.username.data, form.remember_me.data))
-        return redirect(url_for('index'))
-    return render_template('login.html', title='Панель входа', form=form)
+    if request.method == "POST":
+        email = request.form["email"]
+        password = request.form["password"]
+
+        login = User.query.filter_by(email=email, password=password).first()
+        if login is not None:
+            return redirect(url_for("create"))
+    return render_template("login.html")
+
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        email = request.form["email"]
+        password = request.form["password"]
+
+        register = User(email=email, password=password)
+        db.session.add(register)
+        db.session.commit()
+
+        return redirect(url_for("login"))
+    return render_template("register.html")
 
 
 @app.route('/<int:verse_id>')
 def verse(verse_id):
-    verse = get_verse(verse_id)
     return render_template('verse.html', verse=verse)
 
 
 @app.route('/create', methods=['GET', 'POST'])
 def create():
-    if request.method == 'POST':
-        title = request.form['title']
-        content = request.form['content']
-
-        if not title:
-            flash('Вы не ввели название стиха')
-
-        else:
-            conn = get_db_connection()
-            conn.execute('INSERT INTO verses (title, content) VALUES(?, ?)', (title, content))
-            conn.commit()
-            conn.close()
-            return redirect(url_for('verses'))
-
     return render_template('create.html')
 
 
 @app.route('/guest_book', methods=['GET', 'POST'])
 def guest_book():
-    if request.method == 'POST':
-        guestname = request.form['guestname']
-        messagecontent = request.form['messagecontent']
-
-        if not guestname:
-            flash('Вы не ввели имя!')
-
-        else:
-            conn = get_db_connection()
-            conn.execute('INSERT INTO guests (guestname, messagecontent) VALUES(?, ?)', (guestname, messagecontent))
-            conn.commit()
-            conn.close()
-            return redirect(url_for('guest'))
     return render_template('guest.html')
 
 
 @app.route('/<int:id>/edit', methods=('GET', 'POST'))
 def edit(id):
-    verse = get_verse(id)
-
-    if request.method == 'POST':
-        title = request.form['title']
-        content = request.form['content']
-
-        if not title:
-            flash('Вы не ввели название стиха')
-        else:
-            conn = get_db_connection()
-            conn.execute('UPDATE verses SET title=?, content=?' ' WHERE id = ?', (title, content, id))
-            conn.commit()
-            conn.close()
-            return redirect(url_for('verses'))
     return render_template('edit.html', verse=verse)
 
 
 @app.route('/<int:id>/delete', methods=('POST',))
 def delete(id):
-    verse = get_verse(id)
-    conn = get_db_connection()
-    conn.execute('DELETE FROM verses WHERE id = ?', (id,))
-    conn.commit()
-    conn.close()
-    flash('Стих "{}" удален!'.format(verse['title']))
     return redirect(url_for('verses'))
 
 
