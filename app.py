@@ -41,6 +41,7 @@ def get_guest(guest_id):
     return guest
 
 
+@app.route('/')
 @app.route('/index')
 def index():
     return render_template('index.html', title='Главная')
