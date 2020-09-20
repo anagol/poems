@@ -7,7 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'anatolihalasny1969'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dbase.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
 
@@ -21,8 +21,7 @@ class User(db.Model):
 class Verses(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(80))
-    content = db.Column(db.String(120))
-    password = db.Column(db.Text)
+    content = db.Column(db.Text)
 
 
 class Guest(db.Model):
@@ -40,7 +39,8 @@ def index():
 
 @app.route('/verses')
 def verses():
-    return render_template('verses.html', title='Стихи', verses=verse)
+    verses = Verses.query.all()
+    return render_template('verses.html', title='Стихи', verses=verses)
 
 
 @app.route('/about')
@@ -91,11 +91,21 @@ def register():
 
 @app.route('/<int:verse_id>')
 def verse(verse_id):
+    verse = Verses.query.filter_by(id=verse_id).one()
     return render_template('verse.html', verse=verse)
 
 
 @app.route('/create', methods=['GET', 'POST'])
 def create():
+    if request.method == "POST":
+        title = request.form["title"]
+        content = request.form["content"]
+
+        verse = Verses(title=title, content=content)
+
+        db.session.add(verse)
+        db.session.commit()
+        return redirect(url_for('verses'))
     return render_template('create.html')
 
 
