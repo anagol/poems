@@ -2,7 +2,6 @@ from datetime import datetime
 from flask import Flask, render_template, request, url_for, flash, redirect
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-from passlib.hash import pbkdf2_sha256
 
 
 app = Flask(__name__)
@@ -100,13 +99,13 @@ def login():
 def register():
     if request.method == "POST":
         email = request.form["email"]
-        password = pbkdf2_sha256.hash(request.form["password"])
+        password = request.form["password"]
         register = User(email=email, password=password)
         db.session.add(register)
         db.session.commit()
         flash('Вы успешно зарегистрированы, теперь можете войти в систему!')
         return redirect(url_for("login"))
-    return render_template("register.html")
+    return render_template("register.html", title='Регистрация')
 
 
 @app.route('/<int:verse_id>')
