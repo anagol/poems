@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>{{ title }}</h1>
+    <div>
+        {% for gst in guest %}
+            <div class="message">
+                <h3>{{ gst['name'] }}</h3>
+                <p>{{ gst['message'] }}</p>
+
+            </div>
+            <form action="{{ url_for('guest_delete', id=gst['id']) }}" method="post">
+                <input type="submit" value="Удалить комментарий"
+                       class="btn btn-danger btn-sm"
+                       onclick="return confirm('Вы действительно хотите удалить этот коментарий?')">
+            </form>
+
+        {% endfor %}
+    </div>
+{% endblock %}

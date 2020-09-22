@@ -61,6 +61,18 @@ def guest():
     return render_template('guest.html', title='Гостевая книга', guest=guest)
 
 
+@app.route('/guest_edit')
+def guest_edit():
+    guest = Guest.query.all()
+    return render_template('guest_edit.html', title='Редактируем гостевую книгу', guest=guest)
+
+@app.route('/<int:id>/guest_delete', methods=('POST',))
+def guest_delete(id):
+    guest= Guest.query.get_or_404(id)
+    db.session.delete(guest)
+    db.session.commit()
+    return redirect(url_for('guest'))
+
 # @app.route('/guest_book', methods=['GET', 'POST'])
 # def guest_book():
 #     if request.method == "POST":
