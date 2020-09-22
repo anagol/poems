@@ -3,7 +3,6 @@ from flask import Flask, render_template, request, url_for, flash, redirect, ses
 from flask_sqlalchemy import SQLAlchemy
 
 
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'anatolihalasny1969'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dbase.db'
@@ -71,7 +70,7 @@ def guest_delete(id):
     guest= Guest.query.get_or_404(id)
     db.session.delete(guest)
     db.session.commit()
-    return redirect(url_for('guest'))
+    return redirect(url_for('guest_edit'))
 
 
 @app.route('/contacts')
