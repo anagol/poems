@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>{{ title }}</h1>
-<div class="poem">
-{% for verse in verses %}
-    <h3>{{ verse['title'] }}</h3>
-    <a href="{{ url_for('edit', id=verse['id'])}}">
-        <h3>Редактировать</h3></a>
-
-{% endfor %}
-</div>
+    <h1>{{ title }}</h1>
+    <div>
+        {% for verse in verses %}
+            <div class="poem_edit">
+                <h3>{{ verse['title'] }}</h3>
+                <a href="{{ url_for('edit', id=verse['id']) }}">
+                    <h3>Редактировать</h3></a>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

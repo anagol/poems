@@ -5,12 +5,12 @@
 
 @font-face {
     font-family: Annabelle;
-    src: url('/flaskverses/staticerses/static/fonts/Annabelle.ttf') format('truetype');
+    src: url('/static/fonts/Annabelle.ttf') format('truetype');
 }
 
 @font-face {
     font-family: Jikharev;
-    src: url('/flaskverses/staticerses/static/fonts/Jikharev.ttf') format('truetype');
+    src: url('/static/fonts/Jikharev.ttf') format('truetype');
 }
 
 body {
@@ -125,6 +125,12 @@ footer {
     position: relative;
 }
 
+footer a{
+    margin-left: 10px;
+    margin-right: 10px;
+    color: #ddd4d4;
+}
+
 .nav {
     display: flex;
     justify-content: space-evenly;
@@ -185,16 +191,12 @@ ul {
     margin-bottom: 30px;
 }
 
-/*.signature{*/
-/*    width: 142px;*/
-/*    height: 94px;*/
-/*    margin-left: 200px;*/
-/*}*/
-/*.pervomaysk{*/
-/*    width: 300px;*/
-/*    height: 150px;*/
-/*    border-radius: 50%;*/
-/*    margin-right: 50px;*/
-/*    box-shadow: 0 0 10px rgba(0,0,0,0.5);*/
-/*    margin-top: 30px;*/
-/*}*/
+.poem_edit{
+    display: flex;
+    align-items: center;
+}
+.poem_edit a h3{
+    color: greenyellow;
+    margin-left: 15px;
+    font-size: 20px;
+}

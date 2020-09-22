@@ -90,7 +90,7 @@ def login():
         password = request.form["password"]
         login = User.query.filter_by(email=email, password=password).first()
         if login is not None:
-            return redirect(url_for("create"))
+            return redirect(url_for("admin"))
         else:
             flash('Что-то не так!')
     return render_template("login.html")
@@ -100,8 +100,8 @@ def login():
 def register():
     if request.method == "POST":
         email = request.form["email"]
-        password_hash = generate_password_hash(request.form["password"])
-        register = User(email=email, password=password_hash)
+        password = (request.form["password"])
+        register = User(email=email, password=password)
         db.session.add(register)
         db.session.commit()
         flash('Вы успешно зарегистрированы, теперь можете войти в систему!')
