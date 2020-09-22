@@ -2,7 +2,6 @@ from datetime import datetime
 from flask import Flask, render_template, request, url_for, flash, redirect, session
 from flask_sqlalchemy import SQLAlchemy
 
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'anatolihalasny1969'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dbase.db'
@@ -10,6 +9,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
 
 
+# ----------------------  Создаем базу данных ---------------
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     email = db.Column(db.String(120))
@@ -29,23 +29,27 @@ class Guest(db.Model):
     message = db.Column(db.Text)
 
 
+#  --------------------Домашняя страница---------------------
 @app.route('/')
 @app.route('/index')
 def index():
     return render_template('index.html', title='Главная')
 
 
+#  --------------------Страница со списком стихов------------
 @app.route('/verses')
 def verses():
     verses = Verses.query.all()
     return render_template('verses.html', title='Стихи', verses=verses)
 
 
+#  --------------------Страница об авторе--------------------
 @app.route('/about')
 def about():
     return render_template('about.html', title='Об авторе')
 
 
+#  --------------------Гостевая книга------------------------
 @app.route('/guest', methods=['GET', 'POST'])
 def guest():
     guest = Guest.query.all()
@@ -59,6 +63,7 @@ def guest():
     return render_template('guest.html', title='Гостевая книга', guest=guest)
 
 
+#  --------------------Удаляем комментарии-------------------
 @app.route('/guest_edit')
 def guest_edit():
     guest = Guest.query.all()
@@ -67,22 +72,25 @@ def guest_edit():
 
 @app.route('/<int:id>/guest_delete', methods=('POST',))
 def guest_delete(id):
-    guest= Guest.query.get_or_404(id)
+    guest = Guest.query.get_or_404(id)
     db.session.delete(guest)
     db.session.commit()
     return redirect(url_for('guest_edit'))
 
 
+#  --------------------Контакты------------------------------
 @app.route('/contacts')
 def contacts():
     return render_template('contacts.html', title='Контакты')
 
 
+#  --------------------Админка-------------------------------
 @app.route('/admin')
 def admin():
     return render_template('admin.html', title='Панель администратора')
 
 
+#  --------------------Login---------------------------------
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -96,6 +104,7 @@ def login():
     return render_template("login.html")
 
 
+#  --------------------Регистрация---------------------------
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -109,33 +118,35 @@ def register():
     return render_template("register.html", title='Регистрация')
 
 
+#  --------------------Отдельная страница стиха--------------
 @app.route('/<int:verse_id>')
 def verse(verse_id):
     verse = Verses.query.filter_by(id=verse_id).one()
     return render_template('verse.html', verse=verse)
 
 
+#  --------------------Страница добавления стиха-------------
 @app.route('/create', methods=['GET', 'POST'])
 # @login_required
 def create():
     if request.method == "POST":
         title = request.form["title"]
         content = request.form["content"]
-
         verse = Verses(title=title, content=content)
-
         db.session.add(verse)
         db.session.commit()
         return redirect(url_for('verses'))
     return render_template('create.html')
 
 
+#  --------------------Страница редактирования стиха---------
 @app.route('/verses_edit')
 def verses_edit():
     verses = Verses.query.all()
     return render_template('verses_edit.html', title='Редактируем', verses=verses)
 
 
+#  --------------------Редактирем стих-----------------------
 @app.route('/<int:id>/edit', methods=('GET', 'POST'))
 def edit(id):
     verse = Verses.query.get_or_404(id)
@@ -148,6 +159,7 @@ def edit(id):
         return render_template('edit.html', verse=verse)
 
 
+#  --------------------Удаляем стих--------------------------
 @app.route('/<int:id>/delete', methods=('POST',))
 def delete(id):
     verse = Verses.query.get_or_404(id)
