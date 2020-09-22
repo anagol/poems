@@ -5,12 +5,12 @@
 
 @font-face {
     font-family: Annabelle;
-    src: url('/static/fonts/Annabelle.ttf') format('truetype');
+    src: url('/flaskverses/staticerses/static/fonts/Annabelle.ttf') format('truetype');
 }
 
 @font-face {
     font-family: Jikharev;
-    src: url('/static/fonts/Jikharev.ttf') format('truetype');
+    src: url('/flaskverses/staticerses/static/fonts/Jikharev.ttf') format('truetype');
 }
 
 body {

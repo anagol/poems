@@ -1,4 +1,5 @@
 from datetime import datetime
+import flask_login
 from flask import Flask, render_template, request, url_for, flash, redirect
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -15,10 +16,6 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     email = db.Column(db.String(120))
     password = db.Column(db.String(80))
-
-    def __init__(self, email, password):
-        self.email = email
-        self.password = password
 
 
 class Verses(db.Model):
@@ -103,8 +100,8 @@ def login():
 def register():
     if request.method == "POST":
         email = request.form["email"]
-        password = request.form["password"]
-        register = User(email=email, password=password)
+        password_hash = generate_password_hash(request.form["password"])
+        register = User(email=email, password=password_hash)
         db.session.add(register)
         db.session.commit()
         flash('Вы успешно зарегистрированы, теперь можете войти в систему!')
