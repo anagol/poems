@@ -1,6 +1,8 @@
 from datetime import datetime
 from flask import Flask, render_template, request, url_for, flash, redirect, session
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'anatolihalasny1969'
@@ -12,7 +14,7 @@ db = SQLAlchemy(app)
 # ----------------------  Создаем базу данных -------------------------------------------------------------------------
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    email = db.Column(db.String(120))
+    username = db.Column(db.String(120))
     password = db.Column(db.String(80))
 
 
@@ -94,13 +96,15 @@ def admin():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        email = request.form["email"]
-        password = request.form["password"]
-        login = User.query.filter_by(email=email, password=password).first()
-        if login is not None:
-            return redirect(url_for("admin"))
-        else:
-            flash('Что-то не так!')
+        username = request.form["username"]
+        user = User.query.filter_by(username=username).first()
+        if user is None:
+            flash('Неверная пара')
+            return render_template("login.html")
+        if not check_password_hash(user.password, request.form['password']):
+            flash('Неверная пара')
+            return render_template("login.html")
+        return redirect(url_for("admin"))
     return render_template("login.html")
 
 
@@ -108,9 +112,9 @@ def login():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        email = request.form["email"]
-        password = (request.form["password"])
-        register = User(email=email, password=password)
+        username = request.form["username"]
+        password_hash = generate_password_hash(request.form["password"])
+        register = User(username=username, password=password_hash)
         db.session.add(register)
         db.session.commit()
         flash('Вы успешно зарегистрированы, теперь можете войти в систему!')
