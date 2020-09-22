@@ -16,6 +16,10 @@ class User(db.Model):
     email = db.Column(db.String(120))
     password = db.Column(db.String(80))
 
+    def __init__(self, email, password):
+        self.email = email
+        self.password = password
+
 
 class Verses(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
