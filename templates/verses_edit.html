@@ -3,8 +3,9 @@
 <h1>{{ title }}</h1>
 <div class="poem">
 {% for verse in verses %}
-    <a href="{{ url_for('verse', verse_id=verse['id']) }}">
-        <h3>{{ verse['title'] }}</h3></a>
+    <h3>{{ verse['title'] }}</h3>
+    <a href="{{ url_for('edit', id=verse['id'])}}">
+        <h3>Редактировать</h3></a>
 
 {% endfor %}
 </div>

@@ -130,6 +130,12 @@ def create():
     return render_template('create.html')
 
 
+@app.route('/verses_edit')
+def verses_edit():
+    verses = Verses.query.all()
+    return render_template('verses_edit.html', title='Редактируем', verses=verses)
+
+
 @app.route('/<int:id>/edit', methods=('GET', 'POST'))
 def edit(id):
     verse = Verses.query.get_or_404(id)
