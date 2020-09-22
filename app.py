@@ -1,8 +1,7 @@
 from datetime import datetime
-import flask_login
-from flask import Flask, render_template, request, url_for, flash, redirect
+from flask import Flask, render_template, request, url_for, flash, redirect, session
 from flask_sqlalchemy import SQLAlchemy
-from werkzeug.security import generate_password_hash, check_password_hash
+
 
 
 app = Flask(__name__)
@@ -66,23 +65,13 @@ def guest_edit():
     guest = Guest.query.all()
     return render_template('guest_edit.html', title='Редактируем гостевую книгу', guest=guest)
 
+
 @app.route('/<int:id>/guest_delete', methods=('POST',))
 def guest_delete(id):
     guest= Guest.query.get_or_404(id)
     db.session.delete(guest)
     db.session.commit()
     return redirect(url_for('guest'))
-
-# @app.route('/guest_book', methods=['GET', 'POST'])
-# def guest_book():
-#     if request.method == "POST":
-#         name = request.form["name"]
-#         message = request.form["message"]
-#         guest = Guest(name=name, message=message)
-#         db.session.add(guest)
-#         db.session.commit()
-#         return redirect(url_for('guest'))
-#     return render_template('guest.html')
 
 
 @app.route('/contacts')
