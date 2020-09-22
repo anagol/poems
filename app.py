@@ -88,6 +88,7 @@ def contacts():
 
 #  --------------------Админка-----------------------------------------------------------------------------------------
 @app.route('/admin')
+# @login_required
 def admin():
     return render_template('admin.html', title='Панель администратора')
 
