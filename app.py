@@ -1,18 +1,20 @@
 from datetime import datetime
-from flask import Flask, render_template, request, url_for, flash, redirect, session
+from flask import Flask, render_template, request, url_for, flash, redirect
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'anatolihalasny1969'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dbase.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
 
 
 # ----------------------  Создаем базу данных -------------------------------------------------------------------------
-class User(db.Model):
+class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(120))
     password = db.Column(db.String(80))
@@ -29,6 +31,16 @@ class Guest(db.Model):
     pub_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     name = db.Column(db.String(80))
     message = db.Column(db.Text)
+
+
+@login_manager.user_loader
+def load_user(id):
+    return User.query.get(int(id))
+
+
+@app.errorhandler(401)
+def page_not_found(error):
+    return redirect(url_for('error_401'))
 
 
 #  --------------------Домашняя страница-------------------------------------------------------------------------------
@@ -67,12 +79,14 @@ def guest():
 
 #  --------------------Удаляем комментарии-----------------------------------------------------------------------------
 @app.route('/guest_edit')
+@login_required
 def guest_edit():
     guest = Guest.query.all()
     return render_template('guest_edit.html', title='Редактируем гостевую книгу', guest=guest)
 
 
 @app.route('/<int:id>/guest_delete', methods=('POST',))
+@login_required
 def guest_delete(id):
     guest = Guest.query.get_or_404(id)
     db.session.delete(guest)
@@ -88,25 +102,9 @@ def contacts():
 
 #  --------------------Админка-----------------------------------------------------------------------------------------
 @app.route('/admin')
-# @login_required
+@login_required
 def admin():
     return render_template('admin.html', title='Панель администратора')
-
-
-#  --------------------Login-------------------------------------------------------------------------------------------
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    if request.method == "POST":
-        username = request.form["username"]
-        user = User.query.filter_by(username=username).first()
-        if user is None:
-            flash('Неверная пара')
-            return render_template("login.html")
-        if not check_password_hash(user.password, request.form['password']):
-            flash('Неверная пара')
-            return render_template("login.html")
-        return redirect(url_for("admin"))
-    return render_template("login.html")
 
 
 #  --------------------Регистрация-------------------------------------------------------------------------------------
@@ -123,6 +121,33 @@ def register():
     return render_template("register.html", title='Регистрация')
 
 
+#  --------------------Login-------------------------------------------------------------------------------------------
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form["username"]
+        user = User.query.filter_by(username=username).first()
+        login_user(user)
+        if user is None:
+            flash('Неверная пара логин - пароль')
+            return render_template("login.html")
+        if not check_password_hash(user.password, request.form['password']):
+            flash('Неверная пара логин - пароль')
+            return render_template("login.html")
+        flash(f'Вы успешно авторизованы под именем {username}!')
+        return redirect(url_for("admin"))
+
+    return render_template("login.html")
+
+
+#  --------------------Logout------------------------------------------------------------------------------------------
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
+
+
 #  --------------------Отдельная страница стиха------------------------------------------------------------------------
 @app.route('/<int:verse_id>')
 def verse(verse_id):
@@ -132,7 +157,7 @@ def verse(verse_id):
 
 #  --------------------Страница добавления стиха-----------------------------------------------------------------------
 @app.route('/create', methods=['GET', 'POST'])
-# @login_required
+@login_required
 def create():
     if request.method == "POST":
         title = request.form["title"]
@@ -146,6 +171,7 @@ def create():
 
 #  --------------------Страница редактирования стиха-------------------------------------------------------------------
 @app.route('/verses_edit')
+@login_required
 def verses_edit():
     verses = Verses.query.all()
     return render_template('verses_edit.html', title='Редактируем', verses=verses)
@@ -153,6 +179,7 @@ def verses_edit():
 
 #  --------------------Редактирем стих---------------------------------------------------------------------------------
 @app.route('/<int:id>/edit', methods=('GET', 'POST'))
+@login_required
 def edit(id):
     verse = Verses.query.get_or_404(id)
     if request.method == 'POST':
@@ -166,11 +193,17 @@ def edit(id):
 
 #  --------------------Удаляем стих------------------------------------------------------------------------------------
 @app.route('/<int:id>/delete', methods=('POST',))
+@login_required
 def delete(id):
     verse = Verses.query.get_or_404(id)
     db.session.delete(verse)
     db.session.commit()
     return redirect(url_for('verses'))
+
+
+@app.route('/error_401')
+def error_401():
+    return render_template('401.html', title='ОШИБКА 401')
 
 
 if __name__ == '__main__':
