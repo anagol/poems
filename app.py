@@ -1,6 +1,7 @@
 from datetime import datetime
 from flask import Flask, render_template, request, url_for, flash, redirect
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user
 
@@ -28,7 +29,7 @@ class Verses(db.Model):
 
 class Guest(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    pub_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    pub_date = db.Column(db.DateTime(timezone=True), nullable=False, default=func.current_timestamp())
     name = db.Column(db.String(80))
     message = db.Column(db.Text)
 
