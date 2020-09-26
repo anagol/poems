@@ -20,11 +20,25 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(120))
     password = db.Column(db.String(80))
 
+    def __init__(self, username, password):
+        self.username = username
+        self.password = password
+
+    def __repr__(self):
+        return '<User %r >' % self.username
+
 
 class Verses(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(80))
     content = db.Column(db.Text)
+
+    def __init__(self, title, content):
+        self.title = title
+        self.content = content
+
+    def __repr__(self):
+        return '<Title %r >' % self.title
 
 
 class Guest(db.Model):
@@ -32,6 +46,13 @@ class Guest(db.Model):
     pub_date = db.Column(db.DateTime(timezone=True), nullable=False, default=func.current_timestamp())
     name = db.Column(db.String(80))
     message = db.Column(db.Text)
+
+    def __init__(self, name, message):
+        self.name = name
+        self.message = message
+
+    def __repr__(self):
+        return '<Name %r >' % self.name
 
 
 @login_manager.user_loader
