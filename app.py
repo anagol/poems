@@ -94,6 +94,7 @@ def guest():
         message = request.form["message"]
         guest = Guest(name=name, message=message)
         db.session.add(guest)
+        db.session.flush()
         db.session.commit()
         return redirect(url_for('guest'))
     return render_template('guest.html', title='Гостевая книга', guest=guest)
@@ -112,6 +113,7 @@ def guest_edit():
 def guest_delete(id):
     guest = Guest.query.get_or_404(id)
     db.session.delete(guest)
+    db.session.flush()
     db.session.commit()
     return redirect(url_for('guest_edit'))
 
@@ -137,6 +139,7 @@ def register():
         password_hash = generate_password_hash(request.form["password"])
         register = User(username=username, password=password_hash)
         db.session.add(register)
+        db.session.flush()
         db.session.commit()
         flash('Вы успешно зарегистрированы, теперь можете войти в систему!')
         return redirect(url_for("login"))
@@ -186,6 +189,7 @@ def create():
         content = request.form["content"]
         verse = Verses(title=title, content=content)
         db.session.add(verse)
+        db.session.flush()
         db.session.commit()
         return redirect(url_for('verses'))
     return render_template('create.html')
@@ -207,6 +211,7 @@ def edit(id):
     if request.method == 'POST':
         verse.title = request.form['title']
         verse.content = request.form['content']
+        db.session.flush()
         db.session.commit()
         return redirect('/verses')
     else:
@@ -219,6 +224,7 @@ def edit(id):
 def delete(id):
     verse = Verses.query.get_or_404(id)
     db.session.delete(verse)
+    db.session.flush()
     db.session.commit()
     return redirect(url_for('verses'))
 
