@@ -5,14 +5,16 @@ from sqlalchemy import func
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user
 import psycopg2
+from flask_migrate import Migrate
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'anatolihalasny1969'
 app.config[
-    'SQLALCHEMY_DATABASE_URI'] = 'postgres://nxsmuqndjzxadb:9456d5b9c08e100bfad5969aff88910efa1e2459d750e3010ec0f' \
-                                 '82341a06f58@ec2-54-247-122-209.eu-west-1.compute.amazonaws.com:5432/dduqc55ci44dup'
+    'SQLALCHEMY_DATABASE_URI'] = 'postgres://gjlaiwbnqemtrg:b34d03472964e3105f1995eb3fec725962fd0873a4b74576e72fa' \
+                                 '0e34ab14baa@ec2-54-217-236-206.eu-west-1.compute.amazonaws.com:5432/d36nqa6c6e46os'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
