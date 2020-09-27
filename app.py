@@ -4,10 +4,13 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user
+import psycopg2
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'anatolihalasny1969'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dbase.db'
+app.config[
+    'SQLALCHEMY_DATABASE_URI'] = 'postgres://nxsmuqndjzxadb:9456d5b9c08e100bfad5969aff88910efa1e2459d750e3010ec0f' \
+                                 '82341a06f58@ec2-54-247-122-209.eu-west-1.compute.amazonaws.com:5432/dduqc55ci44dup'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
 login_manager = LoginManager()
@@ -16,6 +19,7 @@ login_manager.init_app(app)
 
 # ----------------------  Создаем базу данных -------------------------------------------------------------------------
 class User(UserMixin, db.Model):
+    __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(120))
     password = db.Column(db.String(80))
@@ -29,6 +33,7 @@ class User(UserMixin, db.Model):
 
 
 class Verses(db.Model):
+    __tablename__ = 'verses'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(80))
     content = db.Column(db.Text)
@@ -42,6 +47,7 @@ class Verses(db.Model):
 
 
 class Guest(db.Model):
+    __tablename__ = 'guest'
     id = db.Column(db.Integer, primary_key=True)
     pub_date = db.Column(db.DateTime(timezone=True), nullable=False, default=func.current_timestamp())
     name = db.Column(db.String(80))
