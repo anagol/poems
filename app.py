@@ -9,8 +9,9 @@ from flask_migrate import Migrate
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'anatolihalasny1969'
 app.config[
-    'SQLALCHEMY_DATABASE_URI'] = 'postgres://gjlaiwbnqemtrg:b34d03472964e3105f1995eb3fec725962fd0873a4b74576e72fa' \
-                                 '0e34ab14baa@ec2-54-217-236-206.eu-west-1.compute.amazonaws.com:5432/d36nqa6c6e46os'
+    'SQLALCHEMY_DATABASE_URI'] = 'postgres://zfroyompsfsaol' \
+                                 ':7344da5ce14b9b93c2cbf71fce63aa5495c07df4aa630ace92cef9938a089516@ec2-54-217-236' \
+                                 '-206.eu-west-1.compute.amazonaws.com:5432/d8ifnmcve3nmpm '
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -25,26 +26,12 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(120))
     password = db.Column(db.String(250))
 
-    def __init__(self, username, password):
-        self.username = username
-        self.password = password
-
-    def __repr__(self):
-        return '<User %r >' % self.username
-
 
 class Verses(db.Model):
     __tablename__ = 'verses'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(80))
     content = db.Column(db.Text)
-
-    def __init__(self, title, content):
-        self.title = title
-        self.content = content
-
-    def __repr__(self):
-        return '<Title %r >' % self.title
 
 
 class Guest(db.Model):
@@ -53,13 +40,6 @@ class Guest(db.Model):
     pub_date = db.Column(db.DateTime(timezone=True), nullable=False, default=func.current_timestamp())
     name = db.Column(db.String(80))
     message = db.Column(db.Text)
-
-    def __init__(self, name, message):
-        self.name = name
-        self.message = message
-
-    def __repr__(self):
-        return '<Name %r >' % self.name
 
 
 @login_manager.user_loader
